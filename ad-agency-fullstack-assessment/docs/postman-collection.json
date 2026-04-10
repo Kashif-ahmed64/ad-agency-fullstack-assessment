@@ -1,0 +1,80 @@
+{
+  "info": {
+    "_postman_id": "7a8d1d8b-2ec0-4c6e-946f-8b44f64efb44",
+    "name": "Ad Agency Backend API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@agency.com\",\n  \"password\": \"admin123\"\n}"
+        },
+        "url": "{{base_url}}/auth/login"
+      }
+    },
+    {
+      "name": "Get Campaigns",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{base_url}}/campaigns?status=active&client=Lumiere&page=1&limit=10&sortBy=name&order=asc"
+      }
+    },
+    {
+      "name": "Create Campaign",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Spring Launch\",\n  \"client\": \"Lumiere Skincare\",\n  \"status\": \"active\",\n  \"budget\": 50000,\n  \"spend\": 32000,\n  \"impressions\": 2400000,\n  \"clicks\": 48000,\n  \"conversions\": 1200\n}"
+        },
+        "url": "{{base_url}}/campaigns"
+      }
+    },
+    {
+      "name": "Get Campaign By ID",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{base_url}}/campaigns/c001"
+      }
+    },
+    {
+      "name": "Update Campaign",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"paused\",\n  \"spend\": 35000\n}"
+        },
+        "url": "{{base_url}}/campaigns/c001"
+      }
+    },
+    {
+      "name": "Delete Campaign (Soft)",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{base_url}}/campaigns/c001"
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3001" },
+    { "key": "token", "value": "" }
+  ]
+}
+

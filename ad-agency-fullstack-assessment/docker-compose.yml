@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ad_agency_postgres
+    environment:
+      POSTGRES_DB: ad_agency_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1245780
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: ad_agency_backend
+    env_file: ./backend/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  ai-service:
+    build: ./ai-service
+    container_name: ad_agency_ai_service
+    env_file: ./ai-service/.env
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
+
+  notifications:
+    build: ./notifications
+    container_name: ad_agency_notifications
+    env_file: ./notifications/.env
+    ports:
+      - "3003:3003"
+    depends_on:
+      - postgres
+      - backend
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: ad_agency_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+      - ai-service
+      - notifications
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+

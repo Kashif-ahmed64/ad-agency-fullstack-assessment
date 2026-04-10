@@ -18,3 +18,6 @@ pnpm-debug.log*
 Thumbs.db
 **/.idea/
 **/.vscode/
+
+# ignore accidental nested database workspace at parent
+../database/
