@@ -26,7 +26,7 @@ export default function BriefBuilder() {
     donts: ""
   });
 
-  const progress = useMemo(() => (step / 4) * 100, [step]);
+  const progress = useMemo(() => step, [step]);
 
   async function submitBrief() {
     setLoading(true);
@@ -64,22 +64,40 @@ Donts: ${formData.donts}
   }
 
   return (
-    <section className="grid gap-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
-        <div className="mb-3 flex flex-wrap gap-2 text-xs uppercase tracking-wide text-slate-500">
-          {labels.map((label, i) => (
-            <span key={label} className={step === i + 1 ? "font-semibold text-indigo-600" : ""}>
-              {i + 1}. {label}
-            </span>
-          ))}
-        </div>
-        <div className="h-2 w-full rounded bg-slate-200 dark:bg-slate-800">
-          <div className="h-2 rounded bg-indigo-600" style={{ width: `${progress}%` }} />
+    <section className="grid gap-6">
+      <div className="rounded-xl border border-slate-700 bg-[#1e293b] p-6 shadow-lg shadow-black/20 transition-all duration-200">
+        <div className="flex flex-wrap items-center gap-4">
+          {labels.map((label, i) => {
+            const index = i + 1;
+            const completed = index < progress;
+            const current = index === progress;
+            return (
+              <div key={label} className="flex items-center gap-3">
+                <div
+                  className={[
+                    "grid h-9 w-9 place-items-center rounded-full border text-sm font-bold tracking-tight transition-all duration-200",
+                    completed ? "border-indigo-500 bg-indigo-600 text-white" : "",
+                    current ? "border-slate-200 text-slate-100" : "",
+                    !completed && !current ? "border-slate-700 bg-slate-900 text-slate-400" : ""
+                  ].join(" ")}
+                >
+                  {String(index).padStart(2, "0")}
+                </div>
+                <div className="min-w-[10rem]">
+                  <p className={["text-sm font-bold tracking-tight", current ? "text-slate-100" : "text-slate-300"].join(" ")}>
+                    {label}
+                  </p>
+                  <p className="text-xs text-slate-400">{completed ? "Completed" : current ? "In progress" : "Upcoming"}</p>
+                </div>
+                {i < labels.length - 1 && <div className="hidden h-px w-10 bg-slate-700 sm:block" />}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {!aiResult && (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-xl border border-slate-700 bg-[#1e293b] p-8 shadow-lg shadow-black/20 transition-all duration-200">
           {step === 1 && <Step1Client data={formData} onChange={setFormData} />}
           {step === 2 && <Step2Objective data={formData} onChange={setFormData} />}
           {step === 3 && <Step3Creative data={formData} onChange={setFormData} />}
@@ -90,7 +108,7 @@ Donts: ${formData.donts}
               type="button"
               disabled={step === 1}
               onClick={() => setStep((s) => Math.max(1, s - 1))}
-              className="rounded-md bg-slate-200 px-4 py-2 text-slate-800 disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100"
+              className="rounded-lg border border-slate-700 bg-slate-900 px-5 py-2.5 text-sm font-medium text-slate-200 transition-all duration-200 hover:bg-slate-800 disabled:opacity-50"
             >
               Back
             </button>
@@ -98,7 +116,7 @@ Donts: ${formData.donts}
               <button
                 type="button"
                 onClick={() => setStep((s) => Math.min(4, s + 1))}
-                className="rounded-md bg-indigo-600 px-4 py-2 text-white"
+                className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700"
               >
                 Next
               </button>

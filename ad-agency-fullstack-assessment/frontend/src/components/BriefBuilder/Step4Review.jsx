@@ -1,28 +1,53 @@
 export default function Step4Review({ formData, onSubmit, loading }) {
   return (
     <div className="grid gap-4">
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-800 dark:bg-slate-900/40">
-        <p><strong>Client:</strong> {formData.clientName}</p>
-        <p><strong>Industry:</strong> {formData.industry}</p>
-        <p><strong>Website:</strong> {formData.website || "-"}</p>
-        <p><strong>Competitors:</strong> {formData.competitors || "-"}</p>
-        <p><strong>Objective:</strong> {formData.objective}</p>
-        <p><strong>Target Audience:</strong> {formData.targetAudience}</p>
-        <p><strong>Budget:</strong> ${formData.budget || 0}</p>
-        <p><strong>Tone:</strong> {formData.tone}</p>
-        <p><strong>Imagery:</strong> {formData.imagery}</p>
-        <p><strong>Color Direction:</strong> {formData.colorDirection || "-"}</p>
-        <p><strong>Dos:</strong> {formData.dos || "-"}</p>
-        <p><strong>Donts:</strong> {formData.donts || "-"}</p>
+      <div className="rounded-xl border border-slate-700 bg-slate-900 p-6 text-sm shadow-lg shadow-black/20">
+        <p className="mb-4 text-base font-bold tracking-tight text-slate-100">Review</p>
+        <div className="grid gap-3 md:grid-cols-2">
+          <Field label="Client" value={formData.clientName} />
+          <Field label="Industry" value={formData.industry} />
+          <Field label="Website" value={formData.website || "-"} />
+          <Field label="Competitors" value={formData.competitors || "-"} />
+          <Field label="Objective" value={formData.objective} />
+          <Field label="Budget" value={`$${formData.budget || 0}`} />
+          <div className="md:col-span-2">
+            <Field label="Target Audience" value={formData.targetAudience} />
+          </div>
+          <Field label="Tone" value={formData.tone} />
+          <Field label="Imagery" value={formData.imagery} />
+          <Field label="Color Direction" value={formData.colorDirection || "-"} />
+          <div className="md:col-span-2">
+            <Field label="Dos" value={formData.dos || "-"} />
+          </div>
+          <div className="md:col-span-2">
+            <Field label="Donts" value={formData.donts || "-"} />
+          </div>
+        </div>
       </div>
       <button
         type="button"
         onClick={onSubmit}
         disabled={loading}
-        className="inline-flex items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-white disabled:opacity-60"
+        className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700 disabled:opacity-60"
       >
-        {loading ? "Generating..." : "Submit"}
+        {loading ? (
+          <span className="inline-flex items-center gap-2">
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            Generating...
+          </span>
+        ) : (
+          "Submit"
+        )}
       </button>
+    </div>
+  );
+}
+
+function Field({ label, value }) {
+  return (
+    <div className="rounded-lg border border-slate-700 bg-slate-950 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
+      <p className="mt-1 text-sm text-slate-200">{value}</p>
     </div>
   );
 }

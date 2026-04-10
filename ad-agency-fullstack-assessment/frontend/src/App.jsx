@@ -106,7 +106,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 transition-colors dark:bg-[#0f172a] dark:text-slate-100">
       <Sidebar
         campaigns={campaigns}
         selectedClient={selectedClient}
@@ -122,12 +122,22 @@ export default function App() {
         onClose={() => setMobileOpen(false)}
       />
 
-      <main className="px-4 py-4 md:pl-24 xl:pl-[19rem] md:pr-6">
+      <main className="px-6 py-6 md:pl-24 md:pr-8 xl:pl-[17rem]">
         <Navbar onToggleSidebar={() => setMobileOpen(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode((d) => !d)} />
 
         {view === "dashboard" ? (
           <>
-            <section className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-6">
+            <section className="mb-6 pt-6">
+              <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Campaign Dashboard</h1>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Performance overview across clients and active campaigns</p>
+                </div>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Mar 2026</p>
+              </div>
+            </section>
+
+            <section className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
               {kpiCards.map((card) => (
                 <KPICard key={card.label} {...card} />
               ))}
@@ -146,7 +156,9 @@ export default function App() {
             </section>
           </>
         ) : (
-          <BriefBuilder />
+          <div className="pt-6">
+            <BriefBuilder />
+          </div>
         )}
       </main>
     </div>
