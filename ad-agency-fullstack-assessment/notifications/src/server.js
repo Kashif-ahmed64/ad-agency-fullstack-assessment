@@ -12,6 +12,9 @@ app.use(express.json());
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: { origin: "*" } });
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
+let backendToken = null;
+
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT || 5432),
@@ -25,6 +28,39 @@ io.on("connection", (socket) => {
     socket.join(campaign_id || "all");
   });
 });
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function loginToBackend() {
+  const response = await fetch(`${BACKEND_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email: "admin@agency.com", password: "admin123" })
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Backend login failed: ${response.status} ${text}`);
+  }
+  const json = await response.json();
+  if (!json?.token) throw new Error("Backend login failed: missing token");
+  backendToken = json.token;
+}
+
+async function fetchWithRetry(url, options) {
+  let lastError = null;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(url, options);
+      return response;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await sleep(5000);
+    }
+  }
+  throw lastError;
+}
 
 async function checkAlerts(campaign) {
   const alerts = [];
@@ -57,8 +93,13 @@ async function checkAlerts(campaign) {
 
 async function pollCampaigns() {
   try {
-    const response = await fetch(`${process.env.BACKEND_URL}/campaigns?status=active&limit=500`, {
-      headers: process.env.BACKEND_TOKEN ? { Authorization: `Bearer ${process.env.BACKEND_TOKEN}` } : {}
+    console.log("Fetching campaigns from backend...");
+    if (!backendToken) {
+      await loginToBackend();
+    }
+
+    const response = await fetchWithRetry(`${BACKEND_URL}/campaigns?status=active&limit=500`, {
+      headers: { Authorization: `Bearer ${backendToken}` }
     });
     if (!response.ok) return;
     const payload = await response.json();
@@ -86,10 +127,12 @@ async function pollCampaigns() {
     }
   } catch (error) {
     console.error("Notification poll error:", error.message);
+    backendToken = null;
   }
 }
 
 setInterval(pollCampaigns, 30000);
+pollCampaigns();
 
 app.get("/health", (_req, res) => res.json({ status: "ok", service: "notifications" }));
 
