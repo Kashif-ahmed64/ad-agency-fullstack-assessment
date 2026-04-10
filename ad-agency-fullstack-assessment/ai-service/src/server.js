@@ -8,7 +8,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const app = express();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+// The Generative Language API model catalog changes over time. Use a stable "latest"
+// alias that is actually available for v1beta generateContent.
+const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
 app.use(cors());
 app.use(express.json());
@@ -23,7 +25,7 @@ async function callGemini(prompt) {
 app.get("/health", async (_req, res) => {
   const requestId = crypto.randomUUID();
   try {
-    const payload = { requestId, status: "ok", model: "gemini-1.5-flash" };
+    const payload = { requestId, status: "ok", model: "gemini-flash-latest" };
     console.log({ endpoint: "/health", requestId, response: payload });
     res.json(payload);
   } catch (error) {

@@ -93,6 +93,12 @@ DELETE FROM campaign_metrics_daily;
 DELETE FROM campaigns;
 DELETE FROM clients;
 
+-- Ensure a deterministic admin user exists for the assessment.
+-- Password is "admin123" (bcrypt hash).
+INSERT INTO users (email, password_hash)
+VALUES ('admin@agency.com', '$2b$10$iqdvm2iS2Xp9AIy3C0xAUOCIv0RSsC14RxOy7D0AyZW9wzLl.u0B.')
+ON CONFLICT (email) DO NOTHING;
+
 INSERT INTO clients (id, name, industry, website, key_competitors)
 VALUES
   (
