@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Pencil, Search, Trash2 } from "lucide-react";
 
 const statusStyles = {
   active: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
@@ -20,6 +20,7 @@ export default function CampaignTable({ rows, sortBy, sortOrder, onSort, search,
     { key: "conversions", label: "Conversions" },
     { key: "roas", label: "ROAS" }
   ];
+  const iconProps = { size: 20, strokeWidth: 1.5 };
 
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg shadow-black/5 transition-all duration-200 dark:border-slate-700 dark:bg-[#1e293b] dark:shadow-black/20">
@@ -29,7 +30,10 @@ export default function CampaignTable({ rows, sortBy, sortOrder, onSort, search,
           <p className="text-sm text-slate-500 dark:text-slate-400">Sort and filter across all live campaigns</p>
         </div>
         <div className="relative w-full md:w-80">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
+          <Search
+            {...iconProps}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400"
+          />
           <input
             value={search}
             onChange={(event) => onSearch(event.target.value)}
@@ -44,24 +48,24 @@ export default function CampaignTable({ rows, sortBy, sortOrder, onSort, search,
           <thead>
             <tr className="bg-slate-900 text-xs uppercase tracking-wider text-slate-400">
               {columns.map((column) => (
-                <th key={column.key} className="px-3 py-3">
+                <th key={column.key} className="px-4 py-3 align-middle">
                   <button
                     type="button"
-                    className="inline-flex items-center gap-1 font-semibold text-slate-300 transition-all duration-200 hover:text-white"
+                    className="inline-flex cursor-pointer items-center gap-1 font-semibold text-slate-300 transition-all duration-200 hover:text-white active:scale-95"
                     onClick={() => onSort(column.key)}
                   >
                     {column.label}
                     {sortBy === column.key ? (
                       sortOrder === "asc" ? (
-                        <ChevronUp className="h-4 w-4" />
+                        <ChevronUp {...iconProps} />
                       ) : (
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown {...iconProps} />
                       )
                     ) : null}
                   </button>
                 </th>
               ))}
-              <th className="px-3 py-3 font-semibold text-slate-300">Actions</th>
+              <th className="px-4 py-3 align-middle font-semibold text-slate-300">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -70,33 +74,53 @@ export default function CampaignTable({ rows, sortBy, sortOrder, onSort, search,
                 key={campaign.id}
                 className="border-b border-slate-200 transition-all duration-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-900/40"
               >
-                <td className="px-3 py-4 font-medium text-slate-900 dark:text-slate-100">{campaign.name}</td>
-                <td className="px-3 py-4 text-slate-600 dark:text-slate-300">{campaign.client}</td>
-                <td className="px-3 py-4">
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[campaign.status]}`}>
+                <td className="px-4 py-3 align-middle font-medium text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.name}</span>
+                </td>
+                <td className="px-4 py-3 align-middle text-slate-600 dark:text-slate-300">
+                  <span className="whitespace-nowrap">{campaign.client}</span>
+                </td>
+                <td className="px-4 py-3 align-middle">
+                  <span className={`inline-flex items-center whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[campaign.status]}`}>
                     {campaign.status}
                   </span>
                 </td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">${campaign.budget.toLocaleString()}</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">${campaign.spend.toLocaleString()}</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">{campaign.impressions.toLocaleString()}</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">{campaign.clicks.toLocaleString()}</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">{campaign.ctr.toFixed(2)}%</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">{campaign.conversions.toLocaleString()}</td>
-                <td className="px-3 py-4 font-mono font-bold text-slate-900 dark:text-slate-100">{campaign.roas.toFixed(2)}</td>
-                <td className="px-3 py-4">
-                  <div className="flex gap-2">
+                <td className="px-4 py-3 align-middle text-right font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">${campaign.budget.toLocaleString()}</span>
+                </td>
+                <td className="px-4 py-3 align-middle text-right font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">${campaign.spend.toLocaleString()}</span>
+                </td>
+                <td className="px-4 py-3 align-middle font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.impressions.toLocaleString()}</span>
+                </td>
+                <td className="px-4 py-3 align-middle font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.clicks.toLocaleString()}</span>
+                </td>
+                <td className="px-4 py-3 align-middle font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.ctr.toFixed(2)}%</span>
+                </td>
+                <td className="px-4 py-3 align-middle font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.conversions.toLocaleString()}</span>
+                </td>
+                <td className="px-4 py-3 align-middle font-mono font-bold text-slate-900 dark:text-slate-100">
+                  <span className="whitespace-nowrap">{campaign.roas.toFixed(2)}</span>
+                </td>
+                <td className="px-4 py-3 align-middle">
+                  <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      className="rounded-lg px-2 py-1 text-xs font-medium text-indigo-400 transition-all duration-200 hover:bg-indigo-500/10 hover:text-indigo-300"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-xs font-medium text-indigo-400 transition-all duration-200 hover:bg-indigo-500/10 hover:text-indigo-300 active:scale-95"
                     >
-                      Edit
+                      <Pencil {...iconProps} />
+                      <span className="hidden lg:inline">Edit</span>
                     </button>
                     <button
                       type="button"
-                      className="rounded-lg px-2 py-1 text-xs font-medium text-rose-400 transition-all duration-200 hover:bg-rose-500/10 hover:text-rose-300"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-xs font-medium text-rose-400 transition-all duration-200 hover:bg-rose-500/10 hover:text-rose-300 active:scale-95"
                     >
-                      Delete
+                      <Trash2 {...iconProps} />
+                      <span className="hidden lg:inline">Delete</span>
                     </button>
                   </div>
                 </td>

@@ -4,6 +4,7 @@ import Step2Objective from "./Step2Objective";
 import Step3Creative from "./Step3Creative";
 import Step4Review from "./Step4Review";
 import BriefResult from "./BriefResult";
+import { ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const labels = ["Client Details", "Objectives", "Creative Preferences", "Review & Submit"];
 
@@ -81,7 +82,7 @@ Donts: ${formData.donts}
                     !completed && !current ? "border-slate-700 bg-slate-900 text-slate-400" : ""
                   ].join(" ")}
                 >
-                  {String(index).padStart(2, "0")}
+                  {completed ? <CheckCircle2 size={20} strokeWidth={1.5} /> : String(index).padStart(2, "0")}
                 </div>
                 <div className="min-w-[10rem]">
                   <p className={["text-sm font-bold tracking-tight", current ? "text-slate-100" : "text-slate-300"].join(" ")}>
@@ -108,17 +109,19 @@ Donts: ${formData.donts}
               type="button"
               disabled={step === 1}
               onClick={() => setStep((s) => Math.max(1, s - 1))}
-              className="rounded-lg border border-slate-700 bg-slate-900 px-5 py-2.5 text-sm font-medium text-slate-200 transition-all duration-200 hover:bg-slate-800 disabled:opacity-50"
+              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-5 py-2.5 text-sm font-medium text-slate-200 transition-all duration-200 hover:bg-slate-800 active:scale-95 disabled:opacity-50"
             >
+              <ArrowLeft size={20} strokeWidth={1.5} />
               Back
             </button>
             {step < 4 && (
               <button
                 type="button"
                 onClick={() => setStep((s) => Math.min(4, s + 1))}
-                className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700 active:scale-95"
               >
                 Next
+                <ArrowRight size={20} strokeWidth={1.5} />
               </button>
             )}
           </div>

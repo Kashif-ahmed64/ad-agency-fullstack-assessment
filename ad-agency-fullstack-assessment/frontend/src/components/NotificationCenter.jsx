@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
-import { Bell } from "lucide-react";
+import { AlertTriangle, Bell, BellOff } from "lucide-react";
 
 export default function NotificationCenter() {
   const [open, setOpen] = useState(false);
@@ -25,15 +25,13 @@ export default function NotificationCenter() {
     <div className="relative">
       <button
         type="button"
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-lg shadow-black/5 transition-all duration-200 hover:bg-slate-50 dark:border-slate-700 dark:bg-[#1e293b] dark:text-slate-100 dark:shadow-black/20 dark:hover:bg-slate-800"
+        className="relative inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-lg shadow-black/5 transition-all duration-200 hover:bg-slate-50 active:scale-95 dark:border-slate-700 dark:bg-[#1e293b] dark:text-slate-100 dark:shadow-black/20 dark:hover:bg-slate-800"
         onClick={() => setOpen((v) => !v)}
         aria-label="Toggle notifications"
       >
-        <Bell className="h-5 w-5" />
+        <Bell size={20} strokeWidth={1.5} />
         {unread > 0 && (
-          <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full bg-rose-500 text-[10px] font-bold text-white">
-            {unread}
-          </span>
+          <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-red-500" />
         )}
       </button>
 
@@ -42,7 +40,7 @@ export default function NotificationCenter() {
           {alerts.length === 0 && (
             <div className="grid place-items-center gap-2 p-8 text-center">
               <div className="grid h-10 w-10 place-items-center rounded-xl bg-indigo-500/10 text-indigo-300">
-                <Bell className="h-5 w-5" />
+                <BellOff size={20} strokeWidth={1.5} />
               </div>
               <p className="text-sm font-medium text-slate-200">No notifications yet</p>
               <p className="text-xs text-slate-400">Alerts will appear here in real-time.</p>
@@ -58,9 +56,16 @@ export default function NotificationCenter() {
                 !alert.isRead ? "border-l-2 border-l-indigo-500" : "border-l-2 border-l-transparent"
               ].join(" ")}
             >
-              <p className="font-medium text-slate-100">{alert.campaignName}</p>
-              <p className="mt-1 text-slate-300">{alert.message}</p>
-              <p className="mt-2 text-xs text-slate-400">{new Date(alert.timestamp).toLocaleString()}</p>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 text-amber-400">
+                  <AlertTriangle size={20} strokeWidth={1.5} />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-slate-100">{alert.campaignName}</p>
+                  <p className="mt-1 text-slate-300">{alert.message}</p>
+                  <p className="mt-2 text-xs text-slate-400">{new Date(alert.timestamp).toLocaleString()}</p>
+                </div>
+              </div>
             </button>
           ))}
         </div>

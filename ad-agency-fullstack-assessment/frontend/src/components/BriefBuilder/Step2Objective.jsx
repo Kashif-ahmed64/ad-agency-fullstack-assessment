@@ -1,9 +1,9 @@
 export default function Step2Objective({ data, onChange }) {
   const objectives = ["Awareness", "Consideration", "Conversion"];
   return (
-    <div className="grid gap-4">
-      <div className="grid gap-2 text-sm">
-        <p className="text-sm font-medium text-slate-300">Campaign Objective</p>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-1">
+        <p className="mb-2 block text-sm font-medium text-slate-300">Campaign Objective</p>
         <div className="grid gap-3 md:grid-cols-3">
           {objectives.map((objective) => (
             <label
@@ -33,23 +33,23 @@ export default function Step2Objective({ data, onChange }) {
           ))}
         </div>
       </div>
-      <label className="grid gap-1 text-sm">
-        <span className="mb-1 text-sm font-medium text-slate-300">Target Audience *</span>
+      <label className="mb-6 flex flex-col gap-1">
+        <span className="mb-2 block text-sm font-medium text-slate-300">Target Audience *</span>
         <textarea
           rows={4}
-          className="rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-slate-100 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+          className="w-full rounded-lg border border-slate-700 bg-slate-900 px-4 py-3 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
           value={data.targetAudience}
           onChange={(e) => onChange({ ...data, targetAudience: e.target.value })}
           required
         />
       </label>
-      <label className="grid gap-1 text-sm">
-        <span className="mb-1 text-sm font-medium text-slate-300">Budget</span>
+      <label className="mb-6 flex flex-col gap-1">
+        <span className="mb-2 block text-sm font-medium text-slate-300">Budget</span>
         <div className="relative">
           <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">$</span>
           <input
             type="number"
-            className="w-full rounded-lg border border-slate-700 bg-slate-900 py-3 pl-9 pr-4 text-slate-100 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+            className="w-full rounded-lg border border-slate-700 bg-slate-900 py-3 pl-9 pr-4 text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
             value={data.budget}
             onChange={(e) => onChange({ ...data, budget: e.target.value })}
           />

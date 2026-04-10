@@ -1,3 +1,5 @@
+import { Loader2, Send } from "lucide-react";
+
 export default function Step4Review({ formData, onSubmit, loading }) {
   return (
     <div className="grid gap-4">
@@ -28,15 +30,18 @@ export default function Step4Review({ formData, onSubmit, loading }) {
         type="button"
         onClick={onSubmit}
         disabled={loading}
-        className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700 disabled:opacity-60"
+        className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-indigo-600 px-8 py-3 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700 active:scale-95 disabled:opacity-60"
       >
         {loading ? (
           <span className="inline-flex items-center gap-2">
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            <Loader2 size={20} strokeWidth={1.5} className="animate-spin" />
             Generating...
           </span>
         ) : (
-          "Submit"
+          <>
+            <Send size={20} strokeWidth={1.5} />
+            Submit
+          </>
         )}
       </button>
     </div>

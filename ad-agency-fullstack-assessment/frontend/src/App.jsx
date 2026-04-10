@@ -7,6 +7,8 @@ import CampaignChart from "./components/CampaignChart";
 import CampaignTable from "./components/CampaignTable";
 import DateRangePicker from "./components/DateRangePicker";
 import BriefBuilder from "./components/BriefBuilder/BriefBuilder";
+import Settings from "./components/Settings";
+import { BarChart3, DollarSign, Eye, MousePointer2, ShoppingCart, TrendingUp } from "lucide-react";
 
 function formatCompact(value) {
   if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
@@ -25,18 +27,29 @@ export default function App() {
   const [selectedClient, setSelectedClient] = useState(campaigns[0]?.client || "");
   const [selectedCampaignId, setSelectedCampaignId] = useState(campaigns[0]?.id || "");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("agency-theme") === "dark");
+  const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add("dark");
-      localStorage.setItem("agency-theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("agency-theme", "light");
-    }
-  }, [darkMode]);
+    const saved = localStorage.getItem("theme");
+    const nextIsDark = saved === "dark" || saved == null;
+    setIsDark(nextIsDark);
+    if (nextIsDark) document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
+  }, []);
+
+  function toggleTheme() {
+    setIsDark((prev) => {
+      const next = !prev;
+      if (next) {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+      }
+      return next;
+    });
+  }
 
   const totals = useMemo(() => {
     const impressions = campaigns.reduce((n, c) => n + c.impressions, 0);
@@ -97,12 +110,12 @@ export default function App() {
   }
 
   const kpiCards = [
-    { icon: "👁", label: "Total Impressions", value: formatCompact(totals.impressions), change: 8.4, positive: true },
-    { icon: "🖱", label: "Total Clicks", value: formatCompact(totals.clicks), change: 6.2, positive: true },
-    { icon: "📈", label: "CTR", value: `${totals.ctr.toFixed(2)}%`, change: 1.4, positive: true },
-    { icon: "🎯", label: "Total Conversions", value: totals.conversions.toLocaleString(), change: 4.8, positive: true },
-    { icon: "💵", label: "Total Spend", value: `$${totals.spend.toLocaleString()}`, change: 2.1, positive: false },
-    { icon: "⚖", label: "ROAS", value: totals.roas.toFixed(2), change: 3.5, positive: true }
+    { icon: <Eye size={20} strokeWidth={1.5} />, label: "Total Impressions", value: formatCompact(totals.impressions), change: 8.4, positive: true },
+    { icon: <MousePointer2 size={20} strokeWidth={1.5} />, label: "Total Clicks", value: formatCompact(totals.clicks), change: 6.2, positive: true },
+    { icon: <TrendingUp size={20} strokeWidth={1.5} />, label: "CTR", value: `${totals.ctr.toFixed(2)}%`, change: 1.4, positive: true },
+    { icon: <ShoppingCart size={20} strokeWidth={1.5} />, label: "Total Conversions", value: totals.conversions.toLocaleString(), change: 4.8, positive: true },
+    { icon: <DollarSign size={20} strokeWidth={1.5} />, label: "Total Spend", value: `$${totals.spend.toLocaleString()}`, change: 2.1, positive: false },
+    { icon: <BarChart3 size={20} strokeWidth={1.5} />, label: "ROAS", value: totals.roas.toFixed(2), change: 3.5, positive: true }
   ];
 
   return (
@@ -123,7 +136,7 @@ export default function App() {
       />
 
       <main className="px-6 py-6 md:pl-24 md:pr-8 xl:pl-[17rem]">
-        <Navbar onToggleSidebar={() => setMobileOpen(true)} darkMode={darkMode} onToggleDarkMode={() => setDarkMode((d) => !d)} />
+        <Navbar onToggleSidebar={() => setMobileOpen(true)} darkMode={isDark} onToggleDarkMode={toggleTheme} />
 
         {view === "dashboard" ? (
           <>
@@ -155,10 +168,12 @@ export default function App() {
               <CampaignTable rows={tableRows} sortBy={sortBy} sortOrder={sortOrder} onSort={handleSort} search={search} onSearch={setSearch} />
             </section>
           </>
-        ) : (
+        ) : view === "brief-builder" ? (
           <div className="pt-6">
             <BriefBuilder />
           </div>
+        ) : (
+          <Settings darkMode={isDark} onToggleDarkMode={toggleTheme} />
         )}
       </main>
     </div>

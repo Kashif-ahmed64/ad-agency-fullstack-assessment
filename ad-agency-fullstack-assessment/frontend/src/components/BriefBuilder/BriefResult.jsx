@@ -66,9 +66,9 @@ export default function BriefResult({ result }) {
         <button
           type="button"
           onClick={exportPdf}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-black/20 transition-all duration-200 hover:bg-indigo-700 active:scale-95"
         >
-          <Download className="h-4 w-4" />
+          <Download size={20} strokeWidth={1.5} />
           Export PDF
         </button>
       </div>
